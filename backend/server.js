@@ -10,29 +10,35 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(express.json());  // Parse JSON request bodies
-app.use(cors());  // Enable CORS for frontend-backend communication
+app.use(express.json()); // Parse JSON request bodies
+app.use(cors({
+  origin: 'http://localhost:3000', // Replace with your frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+})); // Enable CORS for frontend-backend communication
 
 // MongoDB Connection
 mongoose
-    .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('Connected to MongoDB'))
-    .catch((err) => console.error('MongoDB connection error:', err));
+  .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Connected to MongoDB'))
+  .catch((err) => console.error('MongoDB connection error:', err));
 
 // Import Routes
-const orderRoutes = require('./routes/orderRoutes');
+const orderRoutes = require('./routes/orderRoutes'); // Routes for orders
+const tableRoutes = require('./routes/tableRoutes'); // Routes for tables
 
 // Use Routes
-app.use('/api/orders', orderRoutes);  // Routes for orders API
+app.use('/api/orders', orderRoutes); // Use the order routes
+app.use('/api/tables', tableRoutes); // Use the table routes
 
 // Sample Route
 app.get('/', (req, res) => {
-    res.send('Backend is running!');
+  res.send('Backend is running!');
 });
 
-// Global Error Handling Middleware (catches errors from async code or route handlers)
+// Global Error Handling Middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);  // Logs the full error stack
+  console.error(err.stack); // Logs the full error stack
   res.status(500).send({ message: 'Something went wrong on the server!' });
 });
 
