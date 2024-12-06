@@ -3,10 +3,10 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
 
-// Load environment variables
+// Load environment variables from .env file
 dotenv.config();
 
-// Create Express app
+// Create an Express app
 const app = express();
 
 // Middleware
@@ -23,11 +23,17 @@ mongoose
 const orderRoutes = require('./routes/orderRoutes');
 
 // Use Routes
-app.use('/api/orders', orderRoutes);
+app.use('/api/orders', orderRoutes);  // Routes for orders API
 
 // Sample Route
 app.get('/', (req, res) => {
     res.send('Backend is running!');
+});
+
+// Global Error Handling Middleware (catches errors from async code or route handlers)
+app.use((err, req, res, next) => {
+  console.error(err.stack);  // Logs the full error stack
+  res.status(500).send({ message: 'Something went wrong on the server!' });
 });
 
 // Start the server
