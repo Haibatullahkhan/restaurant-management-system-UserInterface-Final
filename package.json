@@ -1,0 +1,6 @@
+{
+  "scripts": {
+  "start": "react-scripts start",
+  "backend": "node ../backend/server.js"
+  }
+}
