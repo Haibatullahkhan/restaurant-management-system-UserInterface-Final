@@ -2,23 +2,25 @@ const express = require('express');
 const Order = require('../models/Order');
 const MenuItem = require('../models/MenuItem'); // Ensure MenuItem model is imported correctly
 const router = express.Router();
-
-// Fetch Incoming Orders (status: PENDING, CONFIRMED)
 router.get('/incoming', async (req, res) => {
-  try {
-    const orders = await Order.find({ status: { $in: ['PENDING', 'CONFIRMED'] } })
-      .populate('customer assignedStaff items.menuItem')
-      .sort({ createdAt: -1 });
-
-    if (!orders || orders.length === 0) {
-      return res.status(404).json({ message: 'No incoming orders found.' });
+    try {
+      const orders = await Order.find({ status: { $in: ['PENDING', 'CONFIRMED'] } })
+        .populate('customer', 'username')  // Populate customer with the username
+        .populate('assignedStaff', 'username') // Populate assigned staff username
+        .populate('items.menuItem')
+        .sort({ createdAt: -1 });
+  
+      if (!orders || orders.length === 0) {
+        return res.status(404).json({ message: 'No incoming orders found.' });
+      }
+  
+      res.status(200).json(orders);
+    } catch (error) {
+      console.error('Error fetching incoming orders:', error);
+      res.status(500).json({ message: 'Error fetching incoming orders', error: error.message });
     }
-    res.status(200).json(orders);
-  } catch (error) {
-    console.error("Error fetching incoming orders:", error);
-    res.status(500).json({ message: 'Error fetching incoming orders', error: error.message });
-  }
-});
+  });
+  
 
 // Update Order Status
 router.put('/:id/status', async (req, res) => {
