@@ -4,7 +4,7 @@ const path = require('path');
 const router = express.Router();
 
 // Path to your messages file
-const messagesFilePath = path.join(__dirname, '../messages.json');
+const messagesFilePath = path.join(__dirname, '../data/messages.json');
 
 // Function to read messages from the JSON file
 const readMessagesFromFile = () => {

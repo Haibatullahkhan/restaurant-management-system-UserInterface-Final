@@ -2,9 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
-const orderRoutes = require('./routes/orderRoutes'); 
+const orderRoutes = require('./routes/orderRoutes');
 const tableRoutes = require('./routes/tableRoutes');
 const chatRoutes = require('./routes/chatRoutes');
+const fs = require('fs');
+const path = require('path');
 
 // Load environment variables from .env file
 dotenv.config();
@@ -26,10 +28,10 @@ mongoose
   .then(() => console.log('Connected to MongoDB'))
   .catch((err) => console.error('MongoDB connection error:', err));
 
-// Use Routes
-
+// Routes
 app.use('/api/orders', orderRoutes);
 app.use('/api/tables', tableRoutes);
+app.use('/api/chat', chatRoutes);  // Add chat routes to handle messages
 
 // Sample Route
 app.get('/', (req, res) => {
