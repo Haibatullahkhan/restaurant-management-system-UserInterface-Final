@@ -24,14 +24,33 @@ router.get('/customers', async (req, res) => {
     }
 });
 
+// Get a single orderId
+router.get('/orderId', async (req, res) => {
+    try {
+        // Find a single order and return its ID
+        const order = await Order.findOne({}, '_id'); // Get the first order's ID
+        if (!order) return res.status(404).json({ message: 'No orders found' });
+        res.status(200).json(order); // Send back the order ID
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching order ID', error });
+    }
+});
+
 // Update table status and reservation details
 router.put('/:id/status', async (req, res) => {
-    const { status, reservedBy, reservationTime } = req.body;
+    const { status } = req.body; // Only status is passed when setting available
 
     try {
+        let updateFields = { status }; // Only update the status
+
+        if (status === 'AVAILABLE') {
+            updateFields.reservedBy = null; // Clear the reservedBy field if the table is set to AVAILABLE
+            updateFields.reservationTime = null; // Optionally clear the reservation time as well
+        }
+
         const table = await Table.findByIdAndUpdate(
             req.params.id,
-            { status, reservedBy, reservationTime: reservationTime || null },
+            updateFields,
             { new: true }
         ).populate('reservedBy', 'username');
 
@@ -39,24 +58,6 @@ router.put('/:id/status', async (req, res) => {
         res.status(200).json(table);
     } catch (error) {
         res.status(500).json({ message: 'Error updating table status', error });
-    }
-});
-
-// Reserve a table
-router.post('/reserve', async (req, res) => {
-    const { tableNumber, reservedBy, reservationTime } = req.body;
-
-    try {
-        const table = await Table.findOneAndUpdate(
-            { tableNumber, status: 'AVAILABLE' }, // Only reserve available tables
-            { status: 'RESERVED', reservedBy, reservationTime },
-            { new: true }
-        ).populate('reservedBy', 'username');
-
-        if (!table) return res.status(404).json({ message: 'Table not found or unavailable' });
-        res.status(200).json(table);
-    } catch (error) {
-        res.status(500).json({ message: 'Error reserving table', error });
     }
 });
 
