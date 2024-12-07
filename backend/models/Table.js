@@ -26,4 +26,5 @@ const TableSchema = new mongoose.Schema({
         enum: ['MAIN_HALL', 'OUTDOOR', 'PRIVATE_ROOM']
     }
 });
+
 module.exports = mongoose.model('Table', TableSchema);

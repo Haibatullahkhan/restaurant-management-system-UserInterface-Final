@@ -2,6 +2,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const orderRoutes = require('./routes/orderRoutes'); 
+const tableRoutes = require('./routes/tableRoutes');
+const chatRoutes = require('./routes/chatRoutes');
 
 // Load environment variables from .env file
 dotenv.config();
@@ -10,12 +13,12 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(express.json()); // Parse JSON request bodies
+app.use(express.json()); 
 app.use(cors({
-  origin: 'http://localhost:3000', // Replace with your frontend URL
+  origin: 'http://localhost:3000',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-})); // Enable CORS for frontend-backend communication
+}));
 
 // MongoDB Connection
 mongoose
@@ -23,13 +26,10 @@ mongoose
   .then(() => console.log('Connected to MongoDB'))
   .catch((err) => console.error('MongoDB connection error:', err));
 
-// Import Routes
-const orderRoutes = require('./routes/orderRoutes'); // Routes for orders
-const tableRoutes = require('./routes/tableRoutes'); // Routes for tables
-
 // Use Routes
-app.use('/api/orders', orderRoutes); // Use the order routes
-app.use('/api/tables', tableRoutes); // Use the table routes
+
+app.use('/api/orders', orderRoutes);
+app.use('/api/tables', tableRoutes);
 
 // Sample Route
 app.get('/', (req, res) => {
@@ -38,7 +38,7 @@ app.get('/', (req, res) => {
 
 // Global Error Handling Middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack); // Logs the full error stack
+  console.error(err.stack);
   res.status(500).send({ message: 'Something went wrong on the server!' });
 });
 
