@@ -45,5 +45,17 @@
         "username": "i222463"
       }
     ]
+  },
+  {
+    "orderId": "675595d4ebbfb5cffdd503b1",
+    "history": [
+      {
+        "timestamp": "2024-12-08T14:46:15.891Z",
+        "action": "Status updated to PENDING",
+        "price": 38.97,
+        "status": "PENDING",
+        "username": "i222463"
+      }
+    ]
   }
 ]
