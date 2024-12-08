@@ -1,0 +1,19 @@
+const express = require('express');
+const axios = require('axios');
+const router = express.Router();
+
+
+// Route to fetch sports data (scores, news, etc.)
+router.get('/sports', async (req, res) => {
+    try {
+        // Make a request to ESPN Unofficial API
+        const response = await axios.get('https://site.api.espn.com/apis/site/v2/sports');
+        
+        // Send the response data back to the frontend
+        res.status(200).json(response.data);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching sports data', error });
+    }
+});
+
+module.exports = router;

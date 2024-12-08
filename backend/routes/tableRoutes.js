@@ -66,19 +66,30 @@ router.put('/:id/assign', async (req, res) => {
     const { orderId } = req.body; // Get orderId from the request body
 
     try {
+        // Check if the table is already reserved before assigning a new order
+        const table = await Table.findById(req.params.id);
+        if (table.status === 'RESERVED') {
+            return res.status(400).json({ message: 'Table is already reserved' });
+        }
+
         // Find the order by orderId
         const order = await Order.findById(orderId);
         if (!order) return res.status(404).json({ message: 'Order not found' });
 
         // Assign the order to the table
-        const table = await Table.findByIdAndUpdate(
+        const updatedTable = await Table.findByIdAndUpdate(
             req.params.id,
             { reservedBy: order.customer }, // Assuming order has a 'customer' field that is a reference to the User model
             { new: true }
         ).populate('reservedBy', 'username');
 
-        if (!table) return res.status(404).json({ message: 'Table not found' });
-        res.status(200).json(table);
+        if (!updatedTable) return res.status(404).json({ message: 'Table not found' });
+
+        // Update the table status to RESERVED
+        updatedTable.status = 'RESERVED';
+        await updatedTable.save();
+
+        res.status(200).json(updatedTable);
     } catch (error) {
         res.status(500).json({ message: 'Error assigning order to table', error });
     }

@@ -3,9 +3,10 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const orderRoutes = require('./routes/orderRoutes');
-const tableRoutes = require('./routes/tableRoutes');
+const tableRoutes = require('./routes/tableRoutes');  // Import table routes
 const chatRoutes = require('./routes/chatRoutes');
-const authRoutes = require('./routes/authRoutes'); // Import auth routes
+const authRoutes = require('./routes/authRoutes');
+const sportsRoutes = require('./routes/sportsRoutes');
 const fs = require('fs');
 const path = require('path');
 
@@ -31,41 +32,13 @@ mongoose
 
 // Routes
 app.use('/api/orders', orderRoutes);
-app.use('/api/tables', tableRoutes);
+app.use('/api/tables', tableRoutes);  // Use the table routes
 app.use('/api/chat', chatRoutes);
-app.use('/api/auth', authRoutes); // Add auth routes to handle login and user authentication
-
+app.use('/api/auth', authRoutes);
+app.use('/api/sports', sportsRoutes);
 // Sample Route
 app.get('/', (req, res) => {
   res.send('Backend is running!');
-});
-
-// Route to get order history
-app.get('/api/orders/:orderId/history', (req, res) => {
-  const { orderId } = req.params;
-  const filePath = path.join(__dirname, 'data', 'orderHistory.json');
-
-  fs.readFile(filePath, 'utf8', (err, data) => {
-    if (err) {
-      console.error('Error reading order history file:', err);
-      return res.status(500).json({ message: 'Internal server error' });
-    }
-
-    const historyData = JSON.parse(data);
-    const orderHistory = historyData.find(order => order.orderId === orderId);
-
-    if (!orderHistory) {
-      return res.status(404).json({ message: 'Order history not found' });
-    }
-
-    res.json(orderHistory.history);
-  });
-});
-
-// Global Error Handling Middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send({ message: 'Something went wrong on the server!' });
 });
 
 // Start the server
