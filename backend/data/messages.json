@@ -52,5 +52,35 @@
     "message": "c",
     "role": "Staff",
     "timestamp": "2024-12-07T14:23:40.051Z"
+  },
+  {
+    "sender": "Front Desk",
+    "message": "fjc",
+    "role": "Front Desk",
+    "timestamp": "2024-12-07T20:54:04.626Z"
+  },
+  {
+    "sender": "Front Desk",
+    "message": "hi",
+    "role": "Front Desk",
+    "timestamp": "2024-12-08T08:42:52.875Z"
+  },
+  {
+    "sender": "Staff",
+    "message": "hi",
+    "role": "Staff",
+    "timestamp": "2024-12-08T09:29:24.800Z"
+  },
+  {
+    "sender": "Staff",
+    "message": "hxh",
+    "role": "Staff",
+    "timestamp": "2024-12-08T09:29:26.998Z"
+  },
+  {
+    "sender": "Staff",
+    "message": "zz",
+    "role": "Staff",
+    "timestamp": "2024-12-08T09:29:28.336Z"
   }
 ]
